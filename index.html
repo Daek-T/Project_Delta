@@ -386,8 +386,8 @@ body {
 .home-content {
   display: flex; flex-direction: column; align-items: center;
   justify-content: center; text-align: center;
-  min-height: 100vh;
-  padding-bottom: 80px;
+  flex: 1; min-height: 0; overflow-y: auto;
+  padding: var(--sp-md) var(--sp-sm);
 }
 .home-app-name {
   font-size: clamp(20px, 5.5vw, 28px); font-weight: 900; color: #fff;
@@ -410,12 +410,10 @@ body {
 
 /* ── 하단 내비 바 ── */
 .bottom-nav {
-  position: fixed; bottom: 0;
-  left: 50%; transform: translateX(-50%);
-  width: 100%; max-width: 640px;
+  width: 100%;
   display: grid; grid-template-columns: repeat(4, 1fr);
   background: var(--surface); border-top: 1px solid var(--border);
-  z-index: 200;
+  flex-shrink: 0;
   padding-bottom: env(safe-area-inset-bottom, 6px);
 }
 .nav-btn {
@@ -532,7 +530,7 @@ body {
 <body>
 
 <!-- ════ HOME ════ -->
-<div class="screen" id="screen-start">
+<div class="screen" id="screen-start" style="display:flex;flex-direction:column;overflow-y:hidden;padding:0;">
   <div class="home-content">
     <div class="home-app-name">Project Delta</div>
     <div class="home-version">Prototype v0.1.0</div>
@@ -1971,17 +1969,17 @@ function hammerAIPick(idx, partnerAction) {
     a <= 1 && H_TARGETS[0][a] === idx).length;
 
   // ── 공통: 기본 점수 계산 ─────────────────────────────────
-  let sL = me.l + (ltgt === 0 ? 12 : 0);
-  let sR = me.r + (rtgt === 0 ? 12 : 0);
+  let sL = me.l;
+  let sR = me.r;
   let sD = 0;
 
-  // 킬 기회 최우선
+  // 킬 기회 최우선 (상대 무관)
   if (ps[ltgt].hp > 0 && ps[ltgt].hp <= me.l) sL += 50;
   if (ps[rtgt].hp > 0 && ps[rtgt].hp <= me.r) sR += 50;
 
-  // HP 낮은 상대 공격 보너스
-  if (ps[ltgt].hp > 0) sL += (1 - ps[ltgt].hp / ps[ltgt].mh) * 8;
-  if (ps[rtgt].hp > 0) sR += (1 - ps[rtgt].hp / ps[rtgt].mh) * 8;
+  // HP 낮은 상대 공격 보너스 (상대 무관 - 가장 약한 쪽 자연스럽게 타깃)
+  if (ps[ltgt].hp > 0) sL += (1 - ps[ltgt].hp / ps[ltgt].mh) * 12;
+  if (ps[rtgt].hp > 0) sR += (1 - ps[rtgt].hp / ps[rtgt].mh) * 12;
 
   // 방어 위협 + 카운터 기대값
   [0,1,2].forEach(oi => {
@@ -1999,10 +1997,12 @@ function hammerAIPick(idx, partnerAction) {
   const defThreshold = d === 'legend' ? 0.25 : d === 'hard' ? 0.35 : 0.5;
   const playerLikelyDefending = humanDefendRate >= defThreshold && recentHuman.length >= 1;
 
-  // [핵심1] 파트너가 방어 중 → 플레이어 냄비가 막힘 → 내 공격은 보장된 타격
+  // [핵심1] 파트너가 방어 중 → 냄비 충돌로 방어 막힘 → 공격하면 보장된 타격
+  // 방어 막힌 쪽(냄비 없는 쪽) 공격 보너스 (플레이어든 AI든 무관)
   if (partnerAction === 2) {
-    if (ltgt === 0) sL += (d === 'legend' ? 30 : d === 'hard' ? 22 : 14);
-    if (rtgt === 0) sR += (d === 'legend' ? 30 : d === 'hard' ? 22 : 14);
+    const bonus = d === 'legend' ? 25 : d === 'hard' ? 18 : 10;
+    sL += bonus; // 왼쪽 타깃이 누구든 보장된 타격
+    sR += bonus; // 오른쪽 타깃이 누구든 보장된 타격
   }
 
   // [핵심2] 플레이어가 방어 성향 + 파트너가 공격 중 → 내가 방어해서 플레이어 냄비 막기
