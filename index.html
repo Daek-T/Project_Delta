@@ -56,7 +56,9 @@ body {
   height: 100vh; overflow-y: auto;
   padding: var(--sp-md) var(--sp-sm) 60px;
   background: var(--bg);
+  z-index: 1;
 }
+.screen[hidden] { display: none !important; }
 .mono { font-family: 'JetBrains Mono', monospace; }
 
 /* ── BUTTONS ── */
@@ -326,6 +328,59 @@ body {
 @media (min-width: 480px) {
   .screen { padding: 24px 24px 80px; }
 }
+
+/* ── 튜토리얼 ── */
+.tutorial-list { display: flex; flex-direction: column; gap: 4px; }
+.tut-row {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; padding: 14px;
+}
+.tut-icon { font-size: 28px; flex-shrink: 0; width: 36px; text-align: center; }
+.tut-text { font-size: var(--f-sm); color: var(--text); line-height: 1.5; }
+
+/* ── 상점 ── */
+.shop-points { font-size: var(--f-md); color: var(--accent); font-weight: 700; }
+
+.avatar-wrap {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 16px; margin-bottom: 16px; text-align: center;
+}
+.avatar-box {
+  display: flex; justify-content: center; gap: 12px;
+  font-size: clamp(36px,10vw,52px); margin-bottom: 12px;
+}
+.avatar-layer { transition: all .2s; }
+.avatar-stats { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+
+.shop-tabs { display: flex; gap: 0; margin-bottom: 12px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.shop-tab {
+  flex: 1; padding: 10px; background: var(--surface);
+  border: none; color: var(--muted); font-family: 'Noto Sans KR',sans-serif;
+  font-size: var(--f-sm); font-weight: 700; cursor: pointer; transition: all .15s;
+}
+.shop-tab.active { background: var(--accent); color: #0d0f14; }
+
+.item-list { display: flex; flex-direction: column; gap: 8px; }
+.item-row {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 14px;
+}
+.item-row.equipped { border-color: var(--accent); }
+.item-emoji { font-size: 28px; flex-shrink: 0; }
+.item-info  { flex: 1; }
+.item-name  { font-size: var(--f-sm); font-weight: 700; color: #fff; margin-bottom: 2px; }
+.item-meta  { font-family: 'JetBrains Mono',monospace; font-size: var(--f-xs); color: var(--muted); }
+.item-stat  { color: var(--accent); font-weight: 700; }
+.item-btn {
+  font-family: 'Noto Sans KR',sans-serif; font-size: var(--f-xs); font-weight: 700;
+  padding: 7px 14px; border-radius: 6px; cursor: pointer; border: 1px solid var(--border);
+  background: var(--surface2); color: var(--text); transition: all .15s; white-space: nowrap;
+}
+.item-btn.can-buy  { border-color: var(--accent); color: var(--accent); }
+.item-btn.equipped-btn { border-color: var(--win); color: var(--win); }
+.item-btn.no-money { opacity: .4; cursor: not-allowed; }
 </style>
 </head>
 <body>
@@ -334,8 +389,95 @@ body {
 <div class="screen" id="screen-start">
 <div class="end-wrap">
   <div class="start-emoji">✌🏻✊🏻✋🏻</div>
-  <div class="start-label">QA Prototype v0.0.1</div>
+  <div class="start-label">QA Prototype v0.0.2</div>
   <div class="start-title">가위바위보</div>
+  <button class="btn primary" onclick="show('tutorial')" style="font-size:15px;padding:13px 36px;margin-top:8px;">📖 게임 방법</button>
+</div>
+</div>
+
+<!-- ════ TUTORIAL ════ -->
+<div class="screen" id="screen-tutorial" hidden>
+<div class="page-nav">
+  <div class="nav-label">게임 방법</div>
+</div>
+<div class="tutorial-list">
+  <div class="tut-row">
+    <div class="tut-icon">🚶🏻</div>
+    <div class="tut-text">하루에 내가 걷는 만큼 포인트를 얻어요. 포인트는 100걸음당 1p씩, 하루에 최대 100p까지 얻을 수 있어요</div>
+  </div>
+  <div class="tut-row">
+    <div class="tut-icon">🛒</div>
+    <div class="tut-text">포인트로 머리와 상의, 하의 장비를 구매해 내 캐릭터의 스탯을 올릴 수 있어요. 스탯은 여러 가지 미니 게임에 사용돼요</div>
+  </div>
+  <div class="tut-row">
+    <div class="tut-icon">👑</div>
+    <div class="tut-text">이번 미니 게임 '가위바위보'에서는, 머리 장비는 바위, 상의는 가위, 하의는 보 스탯으로 각각 치환돼요</div>
+  </div>
+  <div class="tut-row">
+    <div class="tut-icon">⚔️</div>
+    <div class="tut-text">가위바위보에서 이기면 이긴 패의 스탯만큼 상대의 HP를 깎아요. 게임 중 HP가 모두 깎이면, 게임에서 패배해요</div>
+  </div>
+  <div class="tut-row">
+    <div class="tut-icon">🏆</div>
+    <div class="tut-text">10턴 안에 누군가의 HP가 모두 깎이지 않으면, 서로의 남은 HP를 비교해서 승부를 가려요</div>
+  </div>
+  <div class="tut-row">
+    <div class="tut-icon">🥊</div>
+    <div class="tut-text">'가위바위보' 미니 게임은 3판 2선승제로 최종 승부를 가려요</div>
+  </div>
+  <div class="tut-row">
+    <div class="tut-icon">🌙</div>
+    <div class="tut-text">장비는 구매가 아닌 렌탈이에요. 매일 자정에 장비가 초기화되니, 정산된 포인트로 장비를 다시 구매해 주세요</div>
+  </div>
+  <div class="tut-row">
+    <div class="tut-icon">💪🏻</div>
+    <div class="tut-text">장비 스탯의 총합이 높을 수록 내 캐릭터의 최대 HP도 올라가요. HP의 최대치는 20이에요</div>
+  </div>
+</div>
+<div style="text-align:center; margin-top:24px;">
+  <button class="btn primary" onclick="openShop()" style="font-size:15px;padding:13px 36px;">🛒 상점으로</button>
+</div>
+</div>
+
+<!-- ════ SHOP ════ -->
+<div class="screen" id="screen-shop" hidden>
+  <div class="page-nav">
+    <div class="nav-label">상점</div>
+    <div class="shop-points mono">💰 <span id="shop-pts">110</span>p</div>
+  </div>
+
+  <!-- 아바타 프리뷰 -->
+  <div class="avatar-wrap">
+    <div class="avatar-box">
+      <div class="avatar-layer" id="av-head">❓</div>
+      <div class="avatar-layer" id="av-top">❓</div>
+      <div class="avatar-layer" id="av-bottom">❓</div>
+    </div>
+    <div class="avatar-stats" id="avatar-stats">
+      <span class="chip sc">✌🏻 가위 <b id="av-sc">1</b></span>
+      <span class="chip rk">✊🏻 바위 <b id="av-rk">1</b></span>
+      <span class="chip pp">✋🏻 보 <b id="av-pp">1</b></span>
+    </div>
+  </div>
+
+  <!-- 파츠별 탭 -->
+  <div class="shop-tabs">
+    <button class="shop-tab active" onclick="switchTab('head')" id="tab-head">머리</button>
+    <button class="shop-tab" onclick="switchTab('top')"    id="tab-top">상의</button>
+    <button class="shop-tab" onclick="switchTab('bottom')" id="tab-bottom">하의</button>
+  </div>
+  <div id="shop-items"></div>
+
+  <div style="text-align:center;margin-top:16px;">
+    <button class="btn primary" onclick="goToDiff()" style="font-size:15px;padding:13px 36px;">⚔️ 게임 시작</button>
+  </div>
+</div>
+
+<!-- ════ DIFF SELECT ════ -->
+<div class="screen" id="screen-diff" hidden>
+<div class="end-wrap">
+  <div class="start-emoji">✌🏻✊🏻✋🏻</div>
+  <div class="start-label">난이도 선택</div>
   <div class="diff-list">
     <button class="diff-btn easy" onclick="selectDiff('easy')">
       <div class="diff-name">🟢 쉬움</div>
@@ -371,7 +513,6 @@ body {
   <div class="preview-vs">
     <div class="prev-card me">
       <div class="prev-emoji" id="pv-p-emoji"></div>
-      <div class="prev-grade" id="pv-p-grade"></div>
       <div class="prev-name"  id="pv-p-name"></div>
       <div class="prev-hp"   id="pv-p-hp"></div>
       <div class="prev-stats" id="pv-p-stats"></div>
@@ -379,7 +520,6 @@ body {
     <div class="vs-badge">VS</div>
     <div class="prev-card">
       <div class="prev-emoji" id="pv-a-emoji"></div>
-      <div class="prev-grade" id="pv-a-grade"></div>
       <div class="prev-name"  id="pv-a-name"></div>
       <div class="prev-hp"   id="pv-a-hp"></div>
       <div class="prev-stats" id="pv-a-stats"></div>
@@ -404,7 +544,6 @@ body {
         <span id="bt-p-emoji" class="ft-emoji"></span>
         <div>
           <div class="ft-name"  id="bt-p-name"></div>
-          <div class="ft-grade" id="bt-p-grade"></div>
         </div>
       </div>
       <div class="hp-row">
@@ -422,7 +561,6 @@ body {
         <span id="bt-a-emoji" class="ft-emoji"></span>
         <div>
           <div class="ft-name"  id="bt-a-name"></div>
-          <div class="ft-grade" id="bt-a-grade"></div>
         </div>
       </div>
       <div class="hp-row">
@@ -542,14 +680,47 @@ const MV_KR    = { scissors:'가위', rock:'바위', paper:'보' };
 // STATE
 // ═══════════════════════════════════════════════════════
 
+// ── 아이템 데이터 ──────────────────────────────────────
+const ITEMS = {
+  head: [
+    { id:'h1', name:'다비치 안경',        stat:1, price:10,  emoji:'👓' },
+    { id:'h2', name:'젠틀몬스터 안경',    stat:2, price:25,  emoji:'👓' },
+    { id:'h3', name:'크롬하츠 선글라스',  stat:3, price:35,  emoji:'👓' },
+    { id:'h4', name:'이동진의 빨간 안경', stat:4, price:50,  emoji:'👓' },
+  ],
+  top: [
+    { id:'t1', name:'나이키 후드티',          stat:1, price:10,  emoji:'👕' },
+    { id:'t2', name:'아더에러 티셔츠',        stat:2, price:25,  emoji:'👕' },
+    { id:'t3', name:'랄프 로렌 폴로 셔츠',    stat:3, price:35,  emoji:'👕' },
+    { id:'t4', name:'초롱이의 톰브라운 가디건', stat:4, price:50, emoji:'👕' },
+  ],
+  bottom: [
+    { id:'b1', name:'아디다스 츄리닝 바지',  stat:1, price:10,  emoji:'👖' },
+    { id:'b2', name:'그라미치 가젯 팬츠',    stat:2, price:25,  emoji:'👖' },
+    { id:'b3', name:'디스퀘어드 청바지',     stat:3, price:35,  emoji:'👖' },
+    { id:'b4', name:'JYP의 비닐 바지',       stat:4, price:50,  emoji:'👖' },
+  ],
+};
+
+const PART_KR   = { head:'머리', top:'상의', bottom:'하의' };
+const PART_RPS  = { head:'바위 ✊🏻', top:'가위 ✌🏻', bottom:'보 ✋🏻' };
+const PART_STAT = { head:'rock', top:'scissors', bottom:'paper' };
+
+let SHOP = {
+  points: 110,
+  equipped: { head: null, top: null, bottom: null },
+};
+
+const PLAYER_BASE = { id:'player', name:'나', grade:'', hp:20, scissors:1, rock:1, paper:1, emoji:'🧑🏻' };
+
 let G = {
   diff: null,
   pChar: null, aChar: null,
   pHP: 0, aHP: 0,
   pMaxHP: 0, aMaxHP: 0,
   turn: 1,
-  history: [],      // 현재 1판의 히스토리
-  seriesHistory: [], // 3판 전체 히스토리 (hard용)
+  history: [],
+  seriesHistory: [],
   score: { p:0, a:0 },
   gameNum: 1,
   active: false,
@@ -560,8 +731,16 @@ let G = {
 // ═══════════════════════════════════════════════════════
 
 function show(id) {
-  document.querySelectorAll('.screen').forEach(s => s.hidden = true);
-  document.getElementById('screen-' + id).hidden = false;
+  const target = document.getElementById('screen-' + id);
+  if (!target) { alert('화면 없음: screen-' + id); return; }
+  document.querySelectorAll('.screen').forEach(s => {
+    s.hidden = true;
+    s.style.display = 'none';
+    s.style.zIndex = '1';
+  });
+  target.hidden = false;
+  target.style.display = '';
+  target.style.zIndex = '10';
   window.scrollTo(0, 0);
 }
 
@@ -577,10 +756,13 @@ function gradeSpan(g) {
 }
 
 function statStr(c) {
+  const vals = [c.scissors, c.rock, c.paper];
+  const maxV = Math.max(...vals), minV = Math.min(...vals);
+  const col = (v) => v === maxV ? 'color:#e87070' : v === minV ? 'color:#6eb5c8' : '';
   return [
-    `<span class="prev-stat">✌🏻 가위 <b>${c.scissors}</b></span>`,
-    `<span class="prev-stat">✊🏻 바위 <b>${c.rock}</b></span>`,
-    `<span class="prev-stat">✋🏻 보 &nbsp;<b>${c.paper}</b></span>`,
+    `<span class="prev-stat" style="${col(c.scissors)}">✌🏻 가위 <b>${c.scissors}</b></span>`,
+    `<span class="prev-stat" style="${col(c.rock)}">✊🏻 바위 <b>${c.rock}</b></span>`,
+    `<span class="prev-stat" style="${col(c.paper)}">✋🏻 보 &nbsp;<b>${c.paper}</b></span>`,
   ].join('');
 }
 
@@ -592,10 +774,121 @@ function setRpsDisabled(d) {
 // START
 // ═══════════════════════════════════════════════════════
 
+// ── 상점 로직 ──────────────────────────────────────────
+let currentTab = 'head';
+
+function goToDiff() { show('diff'); }
+
+function switchTab(part) {
+  currentTab = part;
+  ['head','top','bottom'].forEach(p => {
+    document.getElementById('tab-'+p).classList.toggle('active', p===part);
+  });
+  renderShopItems();
+}
+
+function renderShopItems() {
+  const items = ITEMS[currentTab];
+  const eq    = SHOP.equipped[currentTab];
+  const rpsLabel = PART_RPS[currentTab];
+  const list  = document.getElementById('shop-items');
+
+  list.innerHTML = `<div class="item-list">${items.map(item => {
+    const isEq      = eq && eq.id === item.id;
+    const canAfford = SHOP.points >= item.price;
+    const btnClass  = isEq ? 'equipped-btn' : canAfford ? 'can-buy' : 'no-money';
+    const gradeEmoji = item.stat===1 ? '🇨' : item.stat===2 ? '🇧' : item.stat===3 ? '🇦' : '🇸';
+    const btnText   = isEq ? '✅ 구매완료' : canAfford ? `🪙${item.price}p` : `🪙${item.price}p`;
+    return `
+      <div class="item-row ${isEq?'equipped':''}">
+        <div class="item-emoji">${item.emoji}</div>
+        <div class="item-info">
+          <div class="item-name">${gradeEmoji} ${item.name}</div>
+          <div class="item-meta">${rpsLabel} <span class="item-stat">+${item.stat}</span></div>
+        </div>
+        <button class="item-btn ${btnClass}"
+          onclick="buyItem('${currentTab}','${item.id}')"
+          ${!isEq&&!canAfford?'disabled':''}>
+          ${btnText}
+        </button>
+      </div>`;
+  }).join('')}</div>`;
+}
+
+function buyItem(part, itemId) {
+  const item = ITEMS[part].find(i => i.id === itemId);
+  if (!item) return;
+
+  // 이미 구매한 아이템이면 취소 및 환불
+  if (SHOP.equipped[part] && SHOP.equipped[part].id === itemId) {
+    SHOP.points += item.price;
+    SHOP.equipped[part] = null;
+    updateShopUI();
+    renderShopItems();
+    return;
+  }
+
+  // 다른 아이템으로 갈아탈 때 기존 아이템 환불
+  if (SHOP.equipped[part]) {
+    SHOP.points += SHOP.equipped[part].price;
+  }
+  if (SHOP.points < item.price) {
+    // 환불 후에도 잔액 부족하면 원복
+    if (SHOP.equipped[part]) SHOP.points -= SHOP.equipped[part].price;
+    return;
+  }
+  SHOP.equipped[part] = item;
+  SHOP.points -= item.price;
+
+  updateShopUI();
+  renderShopItems();
+}
+
+function updateShopUI() {
+  document.getElementById('shop-pts').textContent = SHOP.points;
+
+  const parts = ['head','top','bottom'];
+  parts.forEach(p => {
+    const eq = SHOP.equipped[p];
+    document.getElementById('av-'+{head:'head',top:'top',bottom:'bottom'}[p]).textContent
+      = eq ? eq.emoji : '❓';
+  });
+
+  // 스탯 계산 (기본 1 + 장비)
+  const sc = 1 + (SHOP.equipped.top    ? SHOP.equipped.top.stat    : 0);
+  const rk = 1 + (SHOP.equipped.head   ? SHOP.equipped.head.stat   : 0);
+  const pp = 1 + (SHOP.equipped.bottom ? SHOP.equipped.bottom.stat : 0);
+  document.getElementById('av-sc').textContent = sc;
+  document.getElementById('av-rk').textContent = rk;
+  document.getElementById('av-pp').textContent = pp;
+}
+
+function openShop() {
+  updateShopUI();
+  switchTab('head');
+  show('shop');
+}
+
 function selectDiff(d) {
   G.diff = d;
-  renderCharSelect();
-  show('char-select');
+  // 플레이어: 기본 스탯 1,1,1 + 장비 합산
+  const sc = 1 + (SHOP.equipped.top    ? SHOP.equipped.top.stat    : 0);
+  const rk = 1 + (SHOP.equipped.head   ? SHOP.equipped.head.stat   : 0);
+  const pp = 1 + (SHOP.equipped.bottom ? SHOP.equipped.bottom.stat : 0);
+  const total = sc + rk + pp;
+  const pHP = total <= 3  ? 12
+            : total <= 6  ? 14
+            : total <= 9  ? 16
+            : total <= 11 ? 18
+            : 20;
+  G.pChar = Object.assign({}, PLAYER_BASE, { scissors:sc, rock:rk, paper:pp, hp:pHP });
+  // AI: 플레이어 스탯 총합과 가장 가까운 캐릭터 배정
+  const all = Object.values(CHARS);
+  const minDiff = Math.min(...all.map(c => Math.abs((c.scissors+c.rock+c.paper) - total)));
+  const candidates = all.filter(c => Math.abs((c.scissors+c.rock+c.paper) - total) <= minDiff + 1);
+  G.aChar = candidates[Math.floor(Math.random() * candidates.length)];
+  renderPreview();
+  show('preview');
 }
 
 // ═══════════════════════════════════════════════════════
@@ -682,13 +975,11 @@ function renderPreview() {
   document.getElementById('pv-badge').innerHTML  = badge();
 
   document.getElementById('pv-p-emoji').textContent = pChar.emoji;
-  document.getElementById('pv-p-grade').innerHTML   = gradeSpan(pChar.grade);
   document.getElementById('pv-p-name').textContent  = pChar.name;
   document.getElementById('pv-p-hp').textContent    = `HP ${pChar.hp}`;
   document.getElementById('pv-p-stats').innerHTML   = statStr(pChar);
 
   document.getElementById('pv-a-emoji').textContent = aChar.emoji;
-  document.getElementById('pv-a-grade').innerHTML   = gradeSpan(aChar.grade);
   document.getElementById('pv-a-name').textContent  = aChar.name;
   document.getElementById('pv-a-hp').textContent    = `HP ${aChar.hp}`;
   document.getElementById('pv-a-stats').innerHTML   = statStr(aChar);
@@ -716,7 +1007,6 @@ function renderBattle() {
   // Left fighter (player)
   document.getElementById('bt-p-emoji').textContent = pChar.emoji;
   document.getElementById('bt-p-name').textContent  = pChar.name;
-  document.getElementById('bt-p-grade').innerHTML   = gradeSpan(pChar.grade);
   document.getElementById('bt-p-sc').textContent    = `✌🏻${pChar.scissors}`;
   document.getElementById('bt-p-rk').textContent    = `✊🏻${pChar.rock}`;
   document.getElementById('bt-p-pp').textContent    = `✋🏻${pChar.paper}`;
@@ -724,7 +1014,6 @@ function renderBattle() {
   // Right fighter (AI)
   document.getElementById('bt-a-emoji').textContent = aChar.emoji;
   document.getElementById('bt-a-name').textContent  = aChar.name;
-  document.getElementById('bt-a-grade').innerHTML   = gradeSpan(aChar.grade);
   document.getElementById('bt-a-sc').textContent    = `✌🏻${aChar.scissors}`;
   document.getElementById('bt-a-rk').textContent    = `✊🏻${aChar.rock}`;
   document.getElementById('bt-a-pp').textContent    = `✋🏻${aChar.paper}`;
@@ -764,146 +1053,115 @@ function aiPick() {
   const { diff, aChar, pChar, history, seriesHistory, pHP, aHP, turn } = G;
   const remainTurns = 11 - turn;
 
-  // ── 공통 헬퍼 ──────────────────────────────────────────
-  // 내가 m을 냈을 때 기대 데미지 (이기면 +내 공격력, 지면 -상대 공격력)
-  const expectVal = (m) => {
-    const win  =  aChar[m];          // 이겼을 때 줄 데미지
-    const lose = -pChar[BEATS[m]];   // 졌을 때 받을 데미지 (나를 이기는 패의 상대 공격력)
-    return win + lose;               // 기대값 (비기면 0이므로 무시)
-  };
+  const expectVal = (m) => aChar[m] - pChar[BEATS[m]];
 
-  // 세 패 중 가장 높은 값의 패 반환
   const bestBy = (scoreFn) =>
     moves.reduce((a, b) => scoreFn(a) >= scoreFn(b) ? a : b);
 
-  // ── 🟢 쉬움: 본인 스탯만, 이번 턴만, 히스토리 없음 ──
+  const softPick = (scoreFn, temp=1.5) => {
+    const scores = moves.map(m => Math.exp(scoreFn(m) / temp));
+    const total  = scores.reduce((a,b) => a+b, 0);
+    let r = Math.random() * total;
+    for (let i = 0; i < moves.length; i++) { r -= scores[i]; if (r <= 0) return moves[i]; }
+    return moves[moves.length-1];
+  };
+
+  // 🟢 쉬움: 최고 스탯 70% + 랜덤 30%
   if (diff === 'easy') {
-    return bestBy(m => aChar[m]);
+    return Math.random() < 0.70 ? bestBy(m => aChar[m]) : moves[Math.floor(Math.random()*3)];
   }
 
-  // ── 🟡 중간: 본인+상대 스탯, 이번+다음 턴, 현재 판 히스토리 ──
+  // 🟡 중간: 패턴 분석 강화
   if (diff === 'normal') {
-    // 현재 판 히스토리로 플레이어 패턴 파악
     const freq = { scissors:0, rock:0, paper:0 };
     history.forEach(h => freq[h.pm]++);
-    const total = history.length || 1;
-
-    // 각 패의 2턴 기대값 = 이번 턴 기대값 + 다음 턴 예상
+    const total = history.length + 3;
     const score = (m) => {
-      // 이번 턴: 내가 m을 냈을 때 기대값
       const thisVal = expectVal(m);
-      // 다음 턴: 플레이어가 자주 낸 패를 또 낼 확률로 가중 기대값
       const nextVal = moves.reduce((sum, pm) => {
-        const prob = (freq[pm] + 0.5) / (total + 1.5); // 라플라스 평활
-        const bestCounter = bestBy(am => aChar[am] * (BEATS[am] === pm ? 1 : 0));
-        return sum + prob * aChar[bestCounter];
+        const prob = (freq[pm] + 1) / total;
+        const gain = BEATS[m] === pm ? aChar[m] : (BEATS[pm] === m ? -pChar[pm] : 0);
+        return sum + prob * gain;
       }, 0);
-      return thisVal + nextVal * 0.5; // 다음 턴은 50% 가중
+      return thisVal * 0.4 + nextVal * 1.0;
     };
-    return bestBy(score);
+    return softPick(score, 1.2);
   }
 
-  // ── 🔴 어려움: 전 스탯+HP+턴, 3판 전체 히스토리 ──
+  // 🔴 어려움: 패턴 가중치 2배 + HP/턴 상황 판단
   if (diff === 'hard') {
-    // 3판 전체 히스토리로 플레이어 패턴 파악
-    const freq = { scissors:1, rock:1, paper:1 }; // 라플라스 초기값
-    seriesHistory.forEach(h => freq[h.pm] += 2);
-    const total = seriesHistory.length * 2 + 3;
-
-    // 상황 판단: 내가 이기고 있는지
-    const hpDiff = aHP - pHP; // 양수면 내가 유리 (상대 HP가 내 HP보다 낮음)
-    const isWinning = hpDiff > 0;
-    const isCritical = remainTurns <= 3; // 마지막 3턴
-
+    const freq = { scissors:2, rock:2, paper:2 };
+    seriesHistory.forEach(h => freq[h.pm] += 3);
+    const total = seriesHistory.length * 3 + 6;
+    const isWinning  = aHP > pHP;
+    const isCritical = remainTurns <= 3;
+    const aggression = Math.min(2.0, Math.max(0.5, (pHP - aHP) / 5 + 1));
     const score = (m) => {
-      // 기본 기대값
       const baseVal = expectVal(m);
-
-      // 플레이어 패턴 기반 가중치
-      const pmProb = moves.reduce((sum, pm) => {
+      const pmProb  = moves.reduce((sum, pm) => {
         const prob = freq[pm] / total;
-        const dmgIfWin  = BEATS[m] === pm ?  aChar[m] : 0; // m이 pm을 이기면
-        const dmgIfLose = BEATS[pm] === m ? -pChar[pm] : 0; // pm이 m을 이기면
-        return sum + prob * (dmgIfWin + dmgIfLose);
+        return sum + prob * (BEATS[m]===pm ? aChar[m] : BEATS[pm]===m ? -pChar[pm] : 0);
       }, 0);
-
-      // 상황별 전략 조정
-      let situationBonus = 0;
-      if (isCritical && !isWinning) {
-        // 위기: 내 최고 공격력 패에 가중치
-        situationBonus = aChar[m] * 2;
-      } else if (isWinning && remainTurns > 3) {
-        // 유리: 안정적 기대값 선호 (큰 리스크 회피)
-        situationBonus = baseVal > 0 ? baseVal : 0;
-      }
-
-      return pmProb + situationBonus;
+      const urgency = isCritical && !isWinning ? aChar[m]*aggression*2.5
+                    : isWinning ? (baseVal>0?baseVal*1.5:0) : 0;
+      return pmProb * 1.5 + baseVal * 0.5 + urgency;
     };
-    return bestBy(score);
+    return softPick(score, 0.9);
   }
 
-  // ── ⚫ 도전: 역심리전 + 패턴 교란 + 미끼 전략 ──
+  // ⚫ 도전: 역심리전(3수) + 패턴 교란 + 미끼(1턴) + 패턴 가중치 강화
   if (diff === 'legend') {
-    // 3판 전체 히스토리 빈도 분석
-    const freq = { scissors:1, rock:1, paper:1 };
-    seriesHistory.forEach(h => freq[h.pm] += 2);
-    const total = seriesHistory.length * 2 + 3;
+    // ① 패턴 가중치 강화 (기존 3 → 5)
+    const freq = { scissors:2, rock:2, paper:2 };
+    seriesHistory.forEach(h => freq[h.pm] += 5);
+    const total = seriesHistory.length * 5 + 6;
 
-    // AI 자신의 최근 패턴 분석 (교란용)
     const aiFreq = { scissors:0, rock:0, paper:0 };
     seriesHistory.forEach(h => aiFreq[h.am]++);
-    const aiTotal = seriesHistory.length || 1;
-
-    // 상황 판단
-    const hpDiff    = aHP - pHP;
-    const isWinning = hpDiff > 0;
+    const aiTotal    = seriesHistory.length || 1;
+    const isWinning  = aHP > pHP;
     const isCritical = remainTurns <= 3;
-    const isBaiting  = seriesHistory.length >= 4 &&
-      seriesHistory.slice(-3).every(h => h.am === seriesHistory[seriesHistory.length-1].am);
-    // 최근 3턴 AI가 같은 패를 냈으면 미끼가 심어진 상태 → 역이용
+    const aggression = Math.min(2.5, Math.max(0.5, (pHP - aHP) / 4 + 1));
+
+    // ③ 미끼 조건 완화 (2턴 → 1턴만 같아도 발동)
+    const isBaiting = seriesHistory.length >= 2;
 
     const score = (m) => {
-      // ① 기본 기대값 (어려움과 동일)
       const baseVal = expectVal(m);
 
-      // ② 플레이어 패턴 기반 가중치
+      // ① 패턴 기반 가중치 (강화)
       const pmProb = moves.reduce((sum, pm) => {
         const prob = freq[pm] / total;
-        const dmgIfWin  = BEATS[m] === pm ?  aChar[m] : 0;
-        const dmgIfLose = BEATS[pm] === m ? -pChar[pm] : 0;
-        return sum + prob * (dmgIfWin + dmgIfLose);
+        return sum + prob * (BEATS[m]===pm ? aChar[m] : BEATS[pm]===m ? -pChar[pm] : 0);
       }, 0);
 
-      // ③ 역심리전: 플레이어가 AI 패턴을 읽고 카운터를 낼 것을 예측
-      // 플레이어가 예상할 AI의 패 → 그 카운터 → 그 카운터의 카운터
-      const aiMostFreq  = Object.keys(aiFreq).reduce((a,b) => aiFreq[a]>=aiFreq[b]?a:b);
-      const playerGuess = BEATS_BY[aiMostFreq]; // 플레이어가 낼 것으로 예상되는 카운터
-      const metaCounter = BEATS_BY[playerGuess]; // 그 카운터의 카운터
-      const metaBonus   = m === metaCounter ? 3 : 0;
+      // ② 역심리전 3수: 플레이어 → AI 예측 → 카운터 → 카운터의 카운터 → 그 카운터
+      const aiMostFreq   = Object.keys(aiFreq).reduce((a,b) => aiFreq[a]>=aiFreq[b]?a:b);
+      const step1 = BEATS_BY[aiMostFreq];  // 플레이어가 낼 카운터
+      const step2 = BEATS_BY[step1];       // 그 카운터의 카운터 (2수)
+      const step3 = BEATS_BY[step2];       // 그 카운터의 카운터의 카운터 (3수)
+      const metaBonus = m === step3 ? 8 : m === step2 ? 3 : 0;
 
-      // ④ 패턴 교란: AI 자신이 특정 패를 너무 많이 냈으면 페널티
-      const aiUsageRate = (aiFreq[m] + 0.5) / (aiTotal + 1.5);
-      const diversityPenalty = aiUsageRate > 0.5 ? -2 : 0; // 50% 초과 사용 시 패널티
+      // 패턴 교란
+      const aiUsageRate = (aiFreq[m]+0.5) / (aiTotal+1.5);
+      const diversityPenalty = aiUsageRate > 0.4 ? -3 : 0;
 
-      // ⑤ 미끼 역이용: 미끼가 심어진 상태면 플레이어가 카운터를 낼 것 → 그 카운터를 역이용
+      // ③ 미끼 역이용 (1턴만 같아도 발동)
       let baitBonus = 0;
       if (isBaiting) {
-        const baitMove    = seriesHistory[seriesHistory.length-1].am;
-        const baitCounter = BEATS_BY[baitMove]; // 플레이어가 낼 카운터
-        baitBonus = m === BEATS_BY[baitCounter] ? 4 : 0; // 그 카운터의 카운터
+        const lastAm = seriesHistory[seriesHistory.length-1].am;
+        const baitCounter = BEATS_BY[lastAm];
+        baitBonus = m === BEATS_BY[baitCounter] ? 8 : 0;
       }
 
-      // ⑥ 상황별 전략 (어려움과 동일)
-      let situationBonus = 0;
-      if (isCritical && !isWinning) {
-        situationBonus = aChar[m] * 2;
-      } else if (isWinning && remainTurns > 3) {
-        situationBonus = baseVal > 0 ? baseVal : 0;
-      }
+      const urgency = isCritical && !isWinning ? aChar[m]*aggression*3
+                    : isWinning ? (baseVal>0?baseVal*2:0) : 0;
 
-      return pmProb + metaBonus + diversityPenalty + baitBonus + situationBonus;
+      return pmProb*3.0 + baseVal*0.5 + metaBonus + diversityPenalty + baitBonus + urgency;
     };
-    return bestBy(score);
+
+    // ① 온도 0.7 → 0.3으로 낮춰서 거의 항상 최적해 선택
+    return softPick(score, 0.3);
   }
 
   return moves[Math.floor(Math.random() * 3)];
@@ -1053,13 +1311,29 @@ function showSeriesEnd(w) {
 }
 
 function nextGame() {
-  renderCharSelect();
-  show('char-select');
+  // 난이도 유지, 스탯 재계산 후 바로 프리뷰로
+  const sc = 1 + (SHOP.equipped.top    ? SHOP.equipped.top.stat    : 0);
+  const rk = 1 + (SHOP.equipped.head   ? SHOP.equipped.head.stat   : 0);
+  const pp = 1 + (SHOP.equipped.bottom ? SHOP.equipped.bottom.stat : 0);
+  const total = sc + rk + pp;
+  const pHP = total <= 3  ? 12
+            : total <= 6  ? 14
+            : total <= 9  ? 16
+            : total <= 11 ? 18
+            : 20;
+  G.pChar = Object.assign({}, PLAYER_BASE, { scissors:sc, rock:rk, paper:pp, hp:pHP });
+  const all = Object.values(CHARS);
+  const minDiff = Math.min(...all.map(c => Math.abs((c.scissors+c.rock+c.paper) - total)));
+  const candidates = all.filter(c => Math.abs((c.scissors+c.rock+c.paper) - total) <= minDiff + 1);
+  G.aChar = candidates[Math.floor(Math.random() * candidates.length)];
+  renderPreview();
+  show('preview');
 }
 
 function resetGame() {
   G = { diff:null, pChar:null, aChar:null, pHP:0, aHP:0, pMaxHP:0, aMaxHP:0,
         turn:1, history:[], seriesHistory:[], score:{p:0,a:0}, gameNum:1, active:false };
+  SHOP = { points:110, equipped:{ head:null, top:null, bottom:null } };
   show('start');
 }
 
