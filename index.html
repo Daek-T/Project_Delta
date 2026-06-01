@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0d0f14">
-<title>가위바위보 — QA Proto</title>
+<title>Project Delta — QA Proto v0.2.0</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
 
@@ -13,7 +13,7 @@
   --surface:  #13161e;
   --surface2: #1a1e2a;
   --border:   #1e2330;
-  --accent:   #c8a96e;
+  --accent:   #4DB36A;
   --text:     #d4cfc8;
   --muted:    #9098a8;
   --c: #6eb5c8; --b: #6ec87a; --a: #c8a96e; --s: #e87070;
@@ -73,7 +73,7 @@ body {
 .btn.primary { background: var(--accent); color: #0d0f14; border-color: var(--accent); }
 @media (hover: hover) {
   .btn:hover { border-color: var(--accent); color: var(--accent); }
-  .btn.primary:hover { background: #d4b87a; }
+  .btn.primary:hover { background: #3a9658; }
 }
 
 /* ── PAGE NAV ── */
@@ -239,7 +239,7 @@ body {
 }
 .rps-btn:disabled { opacity: .35; cursor: not-allowed; transform: none !important; }
 .rps-icon  { font-size: clamp(24px,6.5vw,32px); display: block; margin-bottom: 3px; }
-.rps-label { font-family: 'JetBrains Mono', monospace; font-size: var(--f-xs); color: var(--muted); display: block; margin-bottom: 3px; }
+.rps-label { font-family: 'JetBrains Mono', monospace; font-size: var(--f-xs); color: #fff; display: block; margin-bottom: 3px; }
 .rps-atk   { font-family: 'JetBrains Mono', monospace; font-size: clamp(12px,3vw,15px); font-weight: 700; display: block; }
 .rps-btn.sc .rps-atk { color: var(--sc); }
 .rps-btn.rk .rps-atk { color: var(--rk); }
@@ -279,7 +279,7 @@ body {
 .end-title.win  { color: var(--win); }
 .end-title.lose { color: var(--lose); }
 .end-title.draw { color: var(--draw); }
-.end-sub { font-size: var(--f-sm); color: var(--muted); word-break: keep-all; }
+.end-sub { font-size: var(--f-sm); color: #fff; word-break: keep-all; }
 
 .hp-result-box {
   display: flex; gap: 0;
@@ -381,37 +381,387 @@ body {
 .item-btn.can-buy  { border-color: var(--accent); color: var(--accent); }
 .item-btn.equipped-btn { border-color: var(--win); color: var(--win); }
 .item-btn.no-money { opacity: .4; cursor: not-allowed; }
+
+/* ── 홈 화면 ── */
+.home-content {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; text-align: center;
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+.home-app-name {
+  font-size: clamp(20px, 5.5vw, 28px); font-weight: 900; color: #fff;
+  margin-bottom: 6px; line-height: 1.25; word-break: keep-all;
+}
+.home-version {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--f-xs); color: #4DB36A; margin-bottom: 44px; letter-spacing: 1px;
+}
+.home-avatar { font-size: clamp(80px, 22vw, 110px); margin-bottom: 60px; line-height: 1; }
+.home-step-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--f-xs); color: var(--muted); margin-bottom: 8px; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.home-step-label.today { color: #fff; }
+.home-step-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(28px, 7.5vw, 40px); font-weight: 700; color: #fff;
+}
+
+/* ── 하단 내비 바 ── */
+.bottom-nav {
+  position: fixed; bottom: 0;
+  left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 640px;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  background: var(--surface); border-top: 1px solid var(--border);
+  z-index: 200;
+  padding-bottom: env(safe-area-inset-bottom, 6px);
+}
+.nav-btn {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 10px 4px 10px; background: none; border: none; cursor: pointer;
+  color: var(--muted); font-family: inherit; transition: color .15s; gap: 4px;
+}
+@media (hover: hover) { .nav-btn:not(:disabled):hover { color: #4DB36A; } }
+.nav-btn:not(:disabled) { color: #4DB36A; }
+.nav-btn:disabled { opacity: 0.28; cursor: not-allowed; }
+.nav-icon { font-size: 22px; line-height: 1; }
+.nav-label-txt {
+  font-family: 'JetBrains Mono', monospace; font-size: 9px;
+  letter-spacing: 0.5px; color: inherit;
+}
+
+/* ── 게임 선택 ── */
+.game-select-grid { display: flex; flex-direction: column; gap: 10px; }
+.game-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: clamp(20px, 5vw, 28px) clamp(16px, 4vw, 24px);
+  cursor: pointer; text-align: center; transition: all .15s;
+}
+@media (hover: hover) { .game-card:not(.gc-soon):hover { border-color: var(--accent); transform: translateY(-2px); } }
+.game-card:active:not(.gc-soon) { transform: none; }
+.gc-soon { opacity: 0.32; cursor: not-allowed; pointer-events: none; }
+.gc-emoji { font-size: clamp(30px, 8vw, 42px); margin-bottom: 10px; }
+.gc-name { font-size: var(--f-lg); font-weight: 900; color: #fff; margin-bottom: 4px; }
+.gc-sub {
+  font-family: 'JetBrains Mono', monospace; font-size: var(--f-xs);
+  color: var(--accent); margin-bottom: 8px; letter-spacing: 0.05em;
+}
+.gc-desc { font-size: var(--f-xs); color: var(--muted); line-height: 1.6; word-break: keep-all; }
+
+/* ── 홈 장비 슬롯 ── */
+.home-equip {
+  display: flex; gap: 10px; margin-top: 32px;
+  width: 100%; max-width: 260px;
+}
+.equip-slot {
+  flex: 1; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px 6px 10px; text-align: center;
+}
+.equip-slot-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 9px;
+  color: #fff; text-transform: uppercase; letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+.equip-slot-emoji { font-size: clamp(22px, 6vw, 28px); line-height: 1; margin-bottom: 6px; }
+.equip-slot-stat {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  font-weight: 700; color: #4DB36A;
+}
+.equip-slot.empty .equip-slot-stat { color: var(--muted); }
+
+/* ════ HAMMER GAME CSS ════ */
+.h-arena {
+  position: relative; height: 194px; margin: var(--sp-xs) 0;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+}
+.h-player {
+  position: absolute; text-align: center; transform: translate(-50%,-50%); width: 68px;
+}
+.h-player-emoji { font-size: clamp(20px,5.5vw,26px); line-height: 1; }
+.h-player-name  { font-size: var(--f-xs); font-weight: 700; margin-top: 2px; }
+.h-player-bar   { width: 42px; height: 3px; background: var(--border); border-radius: 2px; margin: 3px auto 0; overflow: hidden; }
+.h-player-fill  { height: 100%; border-radius: 2px; background: var(--win); transition: width .4s; }
+.h-player.dead  { opacity: 0.22; }
+.h-item { position: absolute; transform: translate(-50%,-50%); text-align: center; pointer-events: none; }
+.h-item-e { font-size: 14px; line-height: 1; }
+.h-item-l { font-family: 'JetBrains Mono',monospace; font-size: 8px; color: var(--muted); }
+
+.h-hp-section { display: flex; flex-direction: column; gap: 6px; margin-bottom: var(--sp-sm); }
+.h-hp-row     { display: flex; align-items: center; gap: var(--sp-xs); }
+.h-hp-label   { font-size: var(--f-xs); font-weight: 700; width: 48px; flex-shrink: 0; }
+.h-hp-num     { font-family: 'JetBrains Mono',monospace; font-size: var(--f-xs); min-width: 54px; text-align: right; }
+
+.h-status { text-align: center; font-size: var(--f-xs); color: var(--muted); min-height: 18px; margin-bottom: var(--sp-xs); }
+
+.h-action-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: clamp(5px,1.5vw,8px); margin-bottom: var(--sp-sm); }
+.h-act-btn {
+  background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px;
+  padding: clamp(10px,2.5vw,14px) 4px; cursor: pointer; text-align: center;
+  font-family: 'Noto Sans KR',sans-serif; transition: all .15s;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+}
+.h-act-btn .h-al { font-size: var(--f-sm); font-weight: 700; color: var(--text); }
+.h-act-btn .h-as { font-family: 'JetBrains Mono',monospace; font-size: var(--f-xs); color: var(--muted); }
+@media (hover:hover) { .h-act-btn:not(:disabled):hover { transform: translateY(-2px); filter: brightness(1.15); } }
+.h-act-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.h-standings { display: flex; flex-direction: column; gap: var(--sp-xs); margin-bottom: var(--sp-md); width: 100%; max-width: 320px; }
+.h-stand-row {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 14px; display: flex; align-items: center; gap: 10px;
+}
+.h-stand-rank { font-size: 18px; width: 26px; }
+.h-stand-name { font-size: var(--f-sm); font-weight: 700; flex: 1; }
+.h-stand-bwrap { flex: 2; }
+.h-stand-bar  { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.h-stand-fill { height: 100%; background: var(--win); border-radius: 3px; }
+.h-stand-hp   { font-family: 'JetBrains Mono',monospace; font-size: var(--f-xs); min-width: 54px; text-align: right; }
+
+@keyframes h-shake {
+  0%,100% { transform: translate(-50%,-50%); }
+  20%      { transform: translate(-58%,-50%) rotate(-4deg); }
+  40%      { transform: translate(-42%,-50%) rotate(4deg); }
+  60%      { transform: translate(-57%,-50%) rotate(-2deg); }
+  80%      { transform: translate(-44%,-50%) rotate(2deg); }
+}
+.h-shake { animation: h-shake 0.35s ease; }
 </style>
 </head>
 <body>
 
-<!-- ════ START ════ -->
+<!-- ════ HOME ════ -->
 <div class="screen" id="screen-start">
+  <div class="home-content">
+    <div class="home-app-name">Project Delta</div>
+    <div class="home-version">Prototype v0.1.0</div>
+    <div class="home-avatar">🧑🏻</div>
+    <div class="home-step-label today">오늘의 걸음 수</div>
+    <div class="home-step-count" id="step-count" style="color:#4DB36A;">10,000</div>
+    <div class="home-step-label" style="margin-top:28px;">어제의 걸음 수</div>
+    <div class="home-step-count" style="font-size:clamp(18px,5vw,26px);color:var(--muted);">10,062</div>
+
+    <div class="home-equip">
+      <div class="equip-slot">
+        <div class="equip-slot-label">머리</div>
+        <div class="equip-slot-emoji" id="heq-head"></div>
+        <div class="equip-slot-stat" id="heq-head-stat">—</div>
+      </div>
+      <div class="equip-slot">
+        <div class="equip-slot-label">상의</div>
+        <div class="equip-slot-emoji" id="heq-top"></div>
+        <div class="equip-slot-stat" id="heq-top-stat">—</div>
+      </div>
+      <div class="equip-slot">
+        <div class="equip-slot-label">하의</div>
+        <div class="equip-slot-emoji" id="heq-bottom"></div>
+        <div class="equip-slot-stat" id="heq-bottom-stat">—</div>
+      </div>
+    </div>
+  </div>
+  <nav class="bottom-nav">
+    <button class="nav-btn" onclick="openShop()">
+      <span class="nav-icon">🛒</span>
+      <span class="nav-label-txt">상점</span>
+    </button>
+    <button class="nav-btn" disabled>
+      <span class="nav-icon">💬</span>
+      <span class="nav-label-txt">채팅</span>
+    </button>
+    <button class="nav-btn" onclick="show('game-select')">
+      <span class="nav-icon">🎮</span>
+      <span class="nav-label-txt">게임</span>
+    </button>
+    <button class="nav-btn" disabled>
+      <span class="nav-icon">⚙️</span>
+      <span class="nav-label-txt">설정</span>
+    </button>
+  </nav>
+</div>
+
+<!-- ════ GAME SELECT ════ -->
+<div class="screen" id="screen-game-select" hidden>
+  <div class="page-nav">
+    <div class="nav-label" style="color:#4DB36A;">게임 선택</div>
+  </div>
+  <div class="game-select-grid">
+    <div class="game-card" onclick="selectGame('rps')">
+      <div class="gc-emoji">✌🏻✊🏻✋🏻</div>
+      <div class="gc-name">가위바위보</div>
+      <div class="gc-sub">2인</div>
+      <div class="gc-desc">상대의 심리를 꿰뚫어라! 안 내면 진다. 가위바위보!</div>
+    </div>
+    <div class="game-card" onclick="selectGame('hammer')">
+      <div class="gc-emoji">🔨🍳🔨</div>
+      <div class="gc-name">뿅망치 게임</div>
+      <div class="gc-sub">3인</div>
+      <div class="gc-desc">살살 맞고, 세게 때려라! 맞거나 막거나, 뿅망치 게임!</div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:16px;">
+    <button class="btn primary" onclick="show('start')" style="font-size:15px;padding:13px 36px;">홈으로</button>
+  </div>
+</div>
+
+
+<!-- ════ HAMMER TUTORIAL ════ -->
+<div class="screen" id="screen-hammer-tutorial" hidden>
+  <div class="page-nav">
+    <div class="nav-label" style="color:#4DB36A;">게임 방법 · 뿅망치</div>
+    <button class="btn" onclick="show('game-select')" style="padding:6px 14px;font-size:var(--f-xs);color:#4DB36A;border-color:#4DB36A;">뒤로</button>
+  </div>
+  <div class="tutorial-list">
+    <div class="tut-row">
+      <div class="tut-icon">🔄</div>
+      <div class="tut-text">미니 게임 '뿅망치 게임'에서는 지능은 냄비 뚜껑, 근력은 왼쪽 뿅망치, 체력은 오른쪽 뿅망치 스탯으로 치환돼요</div>
+    </div>
+    <div class="tut-row">
+      <div class="tut-icon">🔺</div>
+      <div class="tut-text">3명이 서로 마주 보고 앉아 서로의 사이에 뿅망치를, 모두의 중앙에 냄비 뚜껑을 놓아요</div>
+    </div>
+    <div class="tut-row">
+      <div class="tut-icon">🔨</div>
+      <div class="tut-text">뿅망치는 각자 양 옆에 1개씩 총 3개, 냄비 뚜껑은 중앙에 딱 1개가 있어요</div>
+    </div>
+    <div class="tut-row">
+      <div class="tut-icon">⚔️</div>
+      <div class="tut-text">매 턴마다 왼쪽 뿅망치, 오른쪽 뿅망치, 냄비 뚜껑 중 하나를 동시에 선택해요. 공격이나 방어에 성공하면 내 스탯만큼 상대에게 대미지를 줘요</div>
+    </div>
+    <div class="tut-row">
+      <div class="tut-icon">💥</div>
+      <div class="tut-text">같은 뿅망치를 2명 이상이 동시에 잡으면 무효, 또 냄비 뚜껑도 2명 이상이 동시에 잡으면 무효가 돼요</div>
+    </div>
+    <div class="tut-row">
+      <div class="tut-icon">💪🏻</div>
+      <div class="tut-text">HP는 장비 스탯의 총합이 높을 수록 올라가요. 최대치는 48이에요</div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:24px;">
+    <button class="btn primary" onclick="show('hammer-diff')" style="font-size:15px;padding:13px 36px;">난이도 선택</button>
+  </div>
+</div>
+
+<!-- ════ HAMMER DIFF ════ -->
+<div class="screen" id="screen-hammer-diff" hidden>
+<button onclick="show('hammer-tutorial')" style="position:absolute;top:var(--sp-sm);right:var(--sp-sm);background:var(--surface);border:1px solid #4DB36A;border-radius:6px;color:#4DB36A;font-family:'Noto Sans KR',sans-serif;font-size:var(--f-xs);font-weight:700;cursor:pointer;padding:6px 14px;">뒤로</button>
 <div class="end-wrap">
-  <div class="start-emoji">✌🏻✊🏻✋🏻</div>
-  <div class="start-label">QA Prototype v0.0.3</div>
-  <div class="start-title">가위바위보</div>
-  <button class="btn primary" onclick="show('tutorial')" style="font-size:15px;padding:13px 36px;margin-top:8px;">📖 게임 방법</button>
+  <div class="start-emoji">🔨🍳🔨</div>
+  <div class="start-label">난이도 선택 · 뿅망치</div>
+  <div class="diff-list">
+    <button class="diff-btn easy"   onclick="hammerSelectDiff('easy')">
+      <div class="diff-name">🟢 쉬움</div>
+    </button>
+    <button class="diff-btn normal" onclick="hammerSelectDiff('normal')">
+      <div class="diff-name">🟡 중간</div>
+    </button>
+    <button class="diff-btn hard"   onclick="hammerSelectDiff('hard')">
+      <div class="diff-name">🔴 어려움</div>
+    </button>
+    <button class="diff-btn legend" onclick="hammerSelectDiff('legend')">
+      <div class="diff-name">⚫ 도전</div>
+    </button>
+  </div>
+</div>
+</div>
+
+<!-- ════ HAMMER GAME ════ -->
+<div class="screen" id="screen-hammer-game" hidden>
+  <div class="battle-top">
+    <div class="nav-label" style="color:#4DB36A;">뿅망치 게임</div>
+    <div class="turn-pill" style="color:#4DB36A;">턴 <span id="hbt-turn">1</span> / 10</div>
+  </div>
+
+  <div class="h-hp-section">
+    <div class="h-hp-row">
+      <span class="h-hp-label" style="color:#4DB36A">🧑🏻 나</span>
+      <div class="hp-bar" style="flex:1"><div class="hp-fill" id="hhb0"></div></div>
+      <span class="h-hp-num" id="hhn0"></span>
+    </div>
+    <div class="h-hp-row">
+      <span class="h-hp-label" id="hhpl1">🤖 B</span>
+      <div class="hp-bar" style="flex:1"><div class="hp-fill" id="hhb1"></div></div>
+      <span class="h-hp-num" id="hhn1"></span>
+    </div>
+    <div class="h-hp-row">
+      <span class="h-hp-label" id="hhpl2">🤖 C</span>
+      <div class="hp-bar" style="flex:1"><div class="hp-fill" id="hhb2"></div></div>
+      <span class="h-hp-num" id="hhn2"></span>
+    </div>
+  </div>
+
+  <div class="h-arena">
+    <div class="h-player" id="hpt0" style="left:50%;top:20%;">
+      <div class="h-player-emoji">🧑🏻</div>
+      <div class="h-player-name" style="color:#4DB36A">나</div>
+      <div class="h-player-bar"><div class="h-player-fill" id="hmh0"></div></div>
+    </div>
+    <div class="h-player" id="hpt1" style="left:80%;top:80%;">
+      <div class="h-player-emoji">🤖</div>
+      <div class="h-player-name">B</div>
+      <div class="h-player-bar"><div class="h-player-fill" id="hmh1"></div></div>
+    </div>
+    <div class="h-player" id="hpt2" style="left:20%;top:80%;">
+      <div class="h-player-emoji">🤖</div>
+      <div class="h-player-name">C</div>
+      <div class="h-player-bar"><div class="h-player-fill" id="hmh2"></div></div>
+    </div>
+    <div class="h-item" style="left:67%;top:49%;"><div class="h-item-e">🔨</div></div>
+    <div class="h-item" style="left:33%;top:49%;"><div class="h-item-e">🔨</div></div>
+    <div class="h-item" style="left:50%;top:88%;"><div class="h-item-e">🔨</div></div>
+    <div class="h-item" style="left:50%;top:55%;"><div class="h-item-e">🍳</div></div>
+  </div>
+
+  <div class="h-status" id="h-status">행동을 선택하세요</div>
+
+  <div class="h-action-grid">
+    <button class="h-act-btn" id="hbtn-l" onclick="hammerPick(0)">
+      <span class="h-al">← C 공격</span>
+      <span class="h-as" id="hbi-l">ATK 0</span>
+    </button>
+    <button class="h-act-btn" id="hbtn-d" onclick="hammerPick(2)">
+      <span class="h-al">🍳 방어</span>
+      <span class="h-as" id="hbi-d">DEF 0</span>
+    </button>
+    <button class="h-act-btn" id="hbtn-r" onclick="hammerPick(1)">
+      <span class="h-al">B 공격 →</span>
+      <span class="h-as" id="hbi-r">ATK 0</span>
+    </button>
+  </div>
+
+  <div class="log-box">
+    <div class="log-head">전투 기록</div>
+    <div id="h-log-body"><div class="log-row" style="color:var(--muted)">— 아직 기록 없음 —</div></div>
+  </div>
+</div>
+
+<!-- ════ HAMMER RESULT ════ -->
+<div class="screen" id="screen-hammer-result" hidden>
+<div class="end-wrap">
+  <div class="end-icon"  id="hres-icon"></div>
+  <div class="end-label">RESULT</div>
+  <div class="end-title" id="hres-title"></div>
+  <div class="end-sub"   id="hres-sub"></div>
+  <div class="h-standings" id="hres-standings"></div>
+  <div class="btn-row">
+    <button class="btn primary" onclick="hammerSelectDiff(HG.diff)">🔄 다시 하기</button>
+    <button class="btn" onclick="show('game-select')">처음으로</button>
+  </div>
 </div>
 </div>
 
 <!-- ════ TUTORIAL ════ -->
 <div class="screen" id="screen-tutorial" hidden>
 <div class="page-nav">
-  <div class="nav-label">게임 방법</div>
+  <div class="nav-label" style="color:#4DB36A;">게임 방법</div>
+  <button class="btn" onclick="show('game-select')" style="padding:6px 14px;font-size:var(--f-xs);color:#4DB36A;border-color:#4DB36A;">뒤로</button>
 </div>
 <div class="tutorial-list">
+
+
   <div class="tut-row">
-    <div class="tut-icon">🚶🏻</div>
-    <div class="tut-text">하루에 내가 걷는 만큼 포인트를 얻어요. 포인트는 100걸음당 1p씩, 하루에 최대 100p까지 얻을 수 있어요</div>
-  </div>
-  <div class="tut-row">
-    <div class="tut-icon">🛒</div>
-    <div class="tut-text">포인트로 머리와 상의, 하의 장비를 구매해 내 캐릭터의 스탯을 올릴 수 있어요. 스탯은 여러 가지 미니 게임에 사용돼요</div>
-  </div>
-  <div class="tut-row">
-    <div class="tut-icon">👑</div>
-    <div class="tut-text">이번 미니 게임 '가위바위보'에서는, 머리 장비는 바위, 상의는 가위, 하의는 보 스탯으로 각각 치환돼요</div>
+    <div class="tut-icon">🔄</div>
+    <div class="tut-text">미니 게임 '가위바위보'에서는 지능은 가위, 근력은 바위, 체력은 보 스탯으로 치환돼요</div>
   </div>
   <div class="tut-row">
     <div class="tut-icon">⚔️</div>
@@ -425,17 +775,14 @@ body {
     <div class="tut-icon">🥊</div>
     <div class="tut-text">'가위바위보' 미니 게임은 3판 2선승제로 최종 승부를 가려요</div>
   </div>
-  <div class="tut-row">
-    <div class="tut-icon">🌙</div>
-    <div class="tut-text">장비는 구매가 아닌 렌탈이에요. 매일 자정에 장비가 초기화되니, 정산된 포인트로 장비를 다시 구매해 주세요</div>
-  </div>
+
   <div class="tut-row">
     <div class="tut-icon">💪🏻</div>
-    <div class="tut-text">장비 스탯의 총합이 높을 수록 내 캐릭터의 최대 HP도 올라가요. HP의 최대치는 20이에요</div>
+    <div class="tut-text">HP는 장비 스탯의 총합이 높을 수록 올라가요. 최대치는 20이에요</div>
   </div>
 </div>
 <div style="text-align:center; margin-top:24px;">
-  <button class="btn primary" onclick="openShop()" style="font-size:15px;padding:13px 36px;">🛒 상점으로</button>
+  <button class="btn primary" onclick="goToDiff()" style="font-size:15px;padding:13px 36px;">난이도 선택</button>
 </div>
 </div>
 
@@ -449,14 +796,14 @@ body {
   <!-- 아바타 프리뷰 -->
   <div class="avatar-wrap">
     <div class="avatar-box">
-      <div class="avatar-layer" id="av-head">❓</div>
-      <div class="avatar-layer" id="av-top">❓</div>
-      <div class="avatar-layer" id="av-bottom">❓</div>
+      <div class="avatar-layer" id="av-head"></div>
+      <div class="avatar-layer" id="av-top"></div>
+      <div class="avatar-layer" id="av-bottom"></div>
     </div>
     <div class="avatar-stats" id="avatar-stats">
-      <span class="chip sc">✌🏻 가위 <b id="av-sc">1</b></span>
-      <span class="chip rk">✊🏻 바위 <b id="av-rk">1</b></span>
-      <span class="chip pp">✋🏻 보 <b id="av-pp">1</b></span>
+      <span class="chip rk">지능 <b id="av-rk">1</b></span>
+      <span class="chip sc">근력 <b id="av-sc">1</b></span>
+      <span class="chip pp">체력 <b id="av-pp">1</b></span>
     </div>
   </div>
 
@@ -469,12 +816,13 @@ body {
   <div id="shop-items"></div>
 
   <div style="text-align:center;margin-top:16px;">
-    <button class="btn primary" onclick="goToDiff()" style="font-size:15px;padding:13px 36px;">⚔️ 게임 시작</button>
+    <button class="btn primary" onclick="show('start')" style="font-size:15px;padding:13px 36px;">홈으로</button>
   </div>
 </div>
 
 <!-- ════ DIFF SELECT ════ -->
 <div class="screen" id="screen-diff" hidden>
+<button onclick="show('tutorial')" style="position:absolute;top:var(--sp-sm);right:var(--sp-sm);background:var(--surface);border:1px solid #4DB36A;border-radius:6px;color:#4DB36A;font-family:'Noto Sans KR',sans-serif;font-size:var(--f-xs);font-weight:700;cursor:pointer;padding:6px 14px;">뒤로</button>
 <div class="end-wrap">
   <div class="start-emoji">✌🏻✊🏻✋🏻</div>
   <div class="start-label">난이도 선택</div>
@@ -507,7 +855,7 @@ body {
 <!-- ════ PREVIEW ════ -->
 <div class="screen" id="screen-preview" hidden>
   <div class="page-nav">
-    <div class="nav-label">게임 준비 · 게임 <span id="pv-gnum">1</span>/3</div>
+    <div class="nav-label" style="color:#4DB36A;">게임 준비 · 게임 <span id="pv-gnum">1</span>/3</div>
     <div class="series-badge" id="pv-badge"></div>
   </div>
   <div class="preview-vs">
@@ -533,9 +881,9 @@ body {
 <!-- ════ GAME ════ -->
 <div class="screen" id="screen-battle" hidden>
   <div class="battle-top">
-    <div class="nav-label">게임 진행</div>
+    <div class="nav-label" style="color:#4DB36A;">게임 진행</div>
     <div class="series-badge" id="bt-badge"></div>
-    <div class="turn-pill">턴 <span id="bt-turn">1</span> / 10</div>
+    <div class="turn-pill" style="color:#4DB36A;">턴 <span id="bt-turn">1</span> / 10</div>
   </div>
 
   <div class="fighters">
@@ -635,6 +983,7 @@ body {
   <div class="end-icon"  id="se-icon"></div>
   <div class="end-label">RESULT</div>
   <div class="end-title" id="se-title"></div>
+  <div class="end-sub"   id="se-sub"></div>
   <div class="series-disp">
     <div class="sd-side"><div class="sd-num" id="se-pscore"></div><div class="sd-label">나</div></div>
     <div class="sd-sep">—</div>
@@ -703,7 +1052,7 @@ const ITEMS = {
 };
 
 const PART_KR   = { head:'머리', top:'상의', bottom:'하의' };
-const PART_RPS  = { head:'바위 ✊🏻', top:'가위 ✌🏻', bottom:'보 ✋🏻' };
+const PART_RPS  = { head:'지능', top:'근력', bottom:'체력' };
 const PART_STAT = { head:'rock', top:'scissors', bottom:'paper' };
 
 let SHOP = {
@@ -715,6 +1064,7 @@ const PLAYER_BASE = { id:'player', name:'나', grade:'', hp:20, scissors:1, rock
 
 let G = {
   diff: null,
+  gameType: null,
   pChar: null, aChar: null,
   pHP: 0, aHP: 0,
   pMaxHP: 0, aMaxHP: 0,
@@ -731,6 +1081,7 @@ let G = {
 // ═══════════════════════════════════════════════════════
 
 function show(id) {
+  if (id === 'start') updateHomeEquip();
   const target = document.getElementById('screen-' + id);
   if (!target) { alert('화면 없음: screen-' + id); return; }
   document.querySelectorAll('.screen').forEach(s => {
@@ -747,7 +1098,7 @@ function show(id) {
 function badge() {
   const p = Math.min(2, G.score.p), a = Math.min(2, G.score.a);
   return `<span class="sb-win">${'●'.repeat(p)}${'○'.repeat(2-p)}</span>`
-       + ` 나 | AI `
+       + `<span style="color:#4DB36A"> 나 | AI </span>`
        + `<span class="sb-lose">${'●'.repeat(a)}${'○'.repeat(2-a)}</span>`;
 }
 
@@ -851,7 +1202,7 @@ function updateShopUI() {
   parts.forEach(p => {
     const eq = SHOP.equipped[p];
     document.getElementById('av-'+{head:'head',top:'top',bottom:'bottom'}[p]).textContent
-      = eq ? eq.emoji : '❓';
+      = eq ? eq.emoji : '';
   });
 
   // 스탯 계산 (기본 1 + 장비)
@@ -1402,10 +1753,10 @@ function renderGameEnd(winner, seriesWinner, gn, byTurn) {
   row.innerHTML = '';
 
   if (seriesWinner) {
-    row.innerHTML = `<button class="btn primary" onclick="showSeriesEnd('${seriesWinner}')">결과 보기 →</button>`;
+    row.innerHTML = `<button class="btn primary" onclick="showSeriesEnd('${seriesWinner}')">결과 보기</button>`;
   } else {
     row.innerHTML = `
-      <button class="btn primary" onclick="nextGame()">다음 게임 (${G.gameNum}/3) →</button>
+      <button class="btn primary" onclick="nextGame()">다음 게임 (${G.gameNum}/3)</button>
       <button class="btn" onclick="resetGame()">처음으로</button>
     `;
   }
@@ -1414,11 +1765,13 @@ function renderGameEnd(winner, seriesWinner, gn, byTurn) {
 function showSeriesEnd(w) {
   const icons  = { p:'👍🏻', a:'🤞🏻', draw:'🫱🏻‍🫲🏻' };
   const titles = { p:'승리', a:'패배', draw:'무승부' };
-  const cls = { p:'win', a:'lose', draw:'draw' };
+  const subs   = { p:'훌륭한 심리전이었어요!', a:'다음엔 이길 수 있어요!', draw:'팽팽한 승부였어요!' };
+  const cls    = { p:'win', a:'lose', draw:'draw' };
 
   document.getElementById('se-icon').textContent  = icons[w];
   document.getElementById('se-title').textContent = titles[w];
   document.getElementById('se-title').className   = `end-title ${cls[w]}`;
+  document.getElementById('se-sub').textContent   = subs[w];
   document.getElementById('se-pscore').textContent = G.score.p;
   document.getElementById('se-ascore').textContent = G.score.a;
   show('series-end');
@@ -1445,13 +1798,336 @@ function nextGame() {
 }
 
 function resetGame() {
-  G = { diff:null, pChar:null, aChar:null, pHP:0, aHP:0, pMaxHP:0, aMaxHP:0,
+  G = { diff:null, gameType:null, pChar:null, aChar:null, pHP:0, aHP:0, pMaxHP:0, aMaxHP:0,
         turn:1, history:[], seriesHistory:[], score:{p:0,a:0}, gameNum:1, active:false };
-  SHOP = { points:110, equipped:{ head:null, top:null, bottom:null } };
-  show('start');
+  show('diff');
+}
+
+
+// ─── HOME EQUIP DISPLAY ────────────────────────────────
+function updateHomeEquip() {
+  ['head','top','bottom'].forEach(part => {
+    const eq = SHOP.equipped[part];
+    const emojiEl = document.getElementById('heq-' + part);
+    const statEl  = document.getElementById('heq-' + part + '-stat');
+    const slot    = emojiEl ? emojiEl.closest('.equip-slot') : null;
+    if (eq) {
+      emojiEl.textContent = eq.emoji;
+      statEl.textContent  = '+' + eq.stat;
+      if (slot) slot.classList.remove('empty');
+    } else {
+      emojiEl.textContent = '';
+      statEl.textContent  = '—';
+      if (slot) slot.classList.add('empty');
+    }
+  });
+}
+
+
+// ══════════════════════════════════════════════════════
+// HAMMER GAME
+// ══════════════════════════════════════════════════════
+const H_TARGETS   = [[2,1],[0,2],[1,0]];
+const H_CONFLICTS = [[0,1,1,0],[1,1,2,0],[2,1,0,0]];
+const H_PNAMES    = ['나(A)','B','C'];
+
+let HG = { diff:null, players:[], pnames:['나(A)','B','C'], turn:1, maxTurns:10, waiting:false, over:false, log:[] };
+
+function hammerSelectDiff(d) {
+  HG.diff = d;
+  const sc = 1 + (SHOP.equipped.top    ? SHOP.equipped.top.stat    : 0); // 근력 → 왼쪽
+  const pp = 1 + (SHOP.equipped.bottom ? SHOP.equipped.bottom.stat : 0); // 체력 → 오른쪽
+  const rk = 1 + (SHOP.equipped.head   ? SHOP.equipped.head.stat   : 0); // 지능 → 방어
+  const total = sc + pp + rk;
+
+  const mk = (l, r, def, name, emoji) => {
+    const mh = (l + r + def) * 4;
+    return { l, r, def, hp: mh, mh, name, emoji };
+  };
+
+  // AI 캐릭터: 플레이어 총합에 가장 가까운 캐릭터 풀에서 2명 선택
+  const all = Object.values(CHARS);
+  const minDiff = Math.min(...all.map(c => Math.abs((c.scissors + c.rock + c.paper) - total)));
+  let pool = all.filter(c => Math.abs((c.scissors + c.rock + c.paper) - total) <= minDiff + 1);
+  // 최소 2명 확보
+  if (pool.length < 2) pool = all.filter(c => Math.abs((c.scissors + c.rock + c.paper) - total) <= minDiff + 2);
+
+  const shuffled = [...pool].sort(() => Math.random() - 0.5);
+  const cB = shuffled[0];
+  const cC = shuffled.find(c => c.id !== cB.id) || shuffled[0];
+
+  // scissors → 왼쪽, paper → 오른쪽, rock → 방어
+  HG.players = [
+    mk(sc, pp, rk, '나', '🧑🏻'),
+    mk(cB.scissors, cB.paper, cB.rock, cB.name, cB.emoji),
+    mk(cC.scissors, cC.paper, cC.rock, cC.name, cC.emoji),
+  ];
+  HG.pnames = ['나(A)', cB.name, cC.name];
+  HG.turn = 1; HG.over = false; HG.waiting = false; HG.log = [];
+  renderHammerBattle();
+  show('hammer-game');
+}
+
+function renderHammerBattle() {
+  const p = HG.players[0];
+  const _hVals = [p.l, p.r, p.def];
+  const _hMax  = Math.max(..._hVals), _hMin = Math.min(..._hVals);
+  const _hCol  = v => v === _hMax ? '#e87070' : v === _hMin ? '#6eb5c8' : 'var(--muted)';
+  const _hSetStat = (id, label, v) => {
+    const el = document.getElementById(id);
+    el.textContent = label + v;
+    el.style.color = _hCol(v);
+  };
+  _hSetStat('hbi-l', 'ATK ', p.l);
+  _hSetStat('hbi-r', 'ATK ', p.r);
+  _hSetStat('hbi-d', 'DEF ', p.def);
+  document.getElementById('hbt-turn').textContent = HG.turn;
+  document.getElementById('h-log-body').innerHTML = '<div class="log-row" style="color:var(--muted)">— 게임 시작! —</div>';
+  document.getElementById('h-status').textContent = '행동을 선택하세요';
+
+  // 캐릭터 이모지·이름 반영
+  [1, 2].forEach(i => {
+    const ch = HG.players[i];
+    const tok = document.getElementById('hpt' + i);
+    tok.querySelector('.h-player-emoji').textContent = ch.emoji;
+    tok.querySelector('.h-player-name').textContent  = ch.name;
+    const lbl = document.getElementById('hhpl' + i);
+    if (lbl) lbl.textContent = ch.emoji + ' ' + ch.name;
+  });
+
+  // 버튼 레이블 갱신
+  document.querySelector('#hbtn-l .h-al').textContent = '← ' + HG.players[2].name + ' 공격';
+  document.querySelector('#hbtn-r .h-al').textContent = HG.players[1].name + ' 공격 →';
+
+  updateHammerHP();
+  hSetBtns(false);
+  HG.waiting = true;
+}
+
+function updateHammerHP() {
+  HG.players.forEach((p,i) => {
+    const pct = Math.max(0, p.hp/p.mh*100);
+    const bar = document.getElementById('hhb'+i);
+    bar.style.width = pct+'%';
+    bar.className = 'hp-fill'+(pct<25?' low':pct<50?' med':'');
+    document.getElementById('hhn'+i).textContent = p.hp+'/'+p.mh;
+    document.getElementById('hmh'+i).style.width = pct+'%';
+    document.getElementById('hpt'+i).classList.toggle('dead', p.hp<=0);
+  });
+}
+
+function hammerPick(action) {
+  if (!HG.waiting || HG.over) return;
+  HG.waiting = false;
+  hSetBtns(true);
+  document.getElementById('h-status').textContent = '결과 계산 중…';
+  const aiB = hammerAIPick(1, null);
+  const aiC = hammerAIPick(2, aiB);
+  const actions = [action, aiB, aiC];
+  HG.log.push(actions);
+  const {dmg, events} = resolveHammerRound(actions);
+  HG.players.forEach((p,i) => { p.hp = Math.max(0, p.hp - dmg[i]); });
+  appendHammerLog(events);
+  updateHammerHP();
+  dmg.forEach((d,i) => {
+    if (d > 0) {
+      const tok = document.getElementById('hpt'+i);
+      tok.classList.remove('h-shake');
+      void tok.offsetWidth;
+      tok.classList.add('h-shake');
+      setTimeout(() => tok.classList.remove('h-shake'), 380);
+    }
+  });
+  setTimeout(() => {
+    HG.turn++;
+    if (HG.turn > HG.maxTurns || HG.players.some(p=>p.hp<=0)) {
+      endHammer();
+    } else {
+      document.getElementById('hbt-turn').textContent = HG.turn;
+      document.getElementById('h-status').textContent = '행동을 선택하세요';
+      hSetBtns(false);
+      HG.waiting = true;
+    }
+  }, 900);
+}
+
+function hammerAIPick(idx, partnerAction) {
+  const ps = HG.players, d = HG.diff;
+  const me = ps[idx];
+  const myRatio = me.hp / me.mh;
+  const ltgt = H_TARGETS[idx][0];
+  const rtgt = H_TARGETS[idx][1];
+
+  // ── 쉬움: 항상 공격, 완전 예측 가능 ─────────────────────
+  if (d === 'easy') {
+    return ps[ltgt].hp <= ps[rtgt].hp ? 0 : 1;
+  }
+
+  // ── 공통: 인간 최근 행동 분석 ────────────────────────────
+  const recentHuman = HG.log.slice(-6).map(h => h[0]);
+  const humanDefendRate = recentHuman.length
+    ? recentHuman.filter(a => a === 2).length / recentHuman.length : 0;
+  const humanAttackOnMe = recentHuman.filter(a =>
+    a <= 1 && H_TARGETS[0][a] === idx).length;
+
+  // ── 공통: 기본 점수 계산 ─────────────────────────────────
+  let sL = me.l + (ltgt === 0 ? 12 : 0);
+  let sR = me.r + (rtgt === 0 ? 12 : 0);
+  let sD = 0;
+
+  // 킬 기회 최우선
+  if (ps[ltgt].hp > 0 && ps[ltgt].hp <= me.l) sL += 50;
+  if (ps[rtgt].hp > 0 && ps[rtgt].hp <= me.r) sR += 50;
+
+  // HP 낮은 상대 공격 보너스
+  if (ps[ltgt].hp > 0) sL += (1 - ps[ltgt].hp / ps[ltgt].mh) * 8;
+  if (ps[rtgt].hp > 0) sR += (1 - ps[rtgt].hp / ps[rtgt].mh) * 8;
+
+  // 방어 위협 + 카운터 기대값
+  [0,1,2].forEach(oi => {
+    if (oi === idx) return;
+    for (let a = 0; a <= 1; a++) {
+      if (H_TARGETS[oi][a] === idx)
+        sD += (a === 0 ? ps[oi].l : ps[oi].r) * 0.6;
+    }
+  });
+  sD += me.def * 0.5;
+  if (myRatio < 0.4) sD += 10;
+  if (myRatio < 0.2) sD += 20;
+
+  // ── 협조 인식 (파트너 선택을 정보로 활용) ────────────────
+  const defThreshold = d === 'legend' ? 0.25 : d === 'hard' ? 0.35 : 0.5;
+  const playerLikelyDefending = humanDefendRate >= defThreshold && recentHuman.length >= 1;
+
+  // [핵심1] 파트너가 방어 중 → 플레이어 냄비가 막힘 → 내 공격은 보장된 타격
+  if (partnerAction === 2) {
+    if (ltgt === 0) sL += (d === 'legend' ? 30 : d === 'hard' ? 22 : 14);
+    if (rtgt === 0) sR += (d === 'legend' ? 30 : d === 'hard' ? 22 : 14);
+  }
+
+  // [핵심2] 플레이어가 방어 성향 + 파트너가 공격 중 → 내가 방어해서 플레이어 냄비 막기
+  // (파트너가 공격할 수 있게 내가 커버)
+  if (playerLikelyDefending && partnerAction !== null && partnerAction !== 2) {
+    sD += (d === 'legend' ? 28 : d === 'hard' ? 20 : 12);
+  }
+
+  // [핵심3] 플레이어가 방어 성향 + 파트너 정보 없음(B 차례) → 방어로 선제 커버 가치
+  if (playerLikelyDefending && partnerAction === null) {
+    sD += (d === 'legend' ? 22 : d === 'hard' ? 15 : 8);
+  }
+
+  // 내가 자주 공격받으면 카운터 방어
+  if (humanAttackOnMe >= 2) sD += (d === 'legend' ? 20 : 12);
+
+  // 충돌 회피: 파트너가 같은 망치를 집으려 한다면 점수 대폭 감소
+  if (partnerAction !== null && partnerAction !== 2) {
+    const pIdx = idx === 2 ? 1 : 2;
+    for (const [p1,a1,p2,a2] of H_CONFLICTS) {
+      const penalty = d === 'legend' ? 55 : 35;
+      if (p1===idx && p2===pIdx && a2===partnerAction && a1===0) sL -= penalty;
+      if (p1===idx && p2===pIdx && a2===partnerAction && a1===1) sR -= penalty;
+      if (p2===idx && p1===pIdx && a1===partnerAction && a2===0) sL -= penalty;
+      if (p2===idx && p1===pIdx && a1===partnerAction && a2===1) sR -= penalty;
+    }
+  }
+
+  // ── 도전·어려움: 최적 선택 ───────────────────────────────
+  if (d === 'legend' || d === 'hard') {
+    return [sL, sR, sD].indexOf(Math.max(sL, sR, sD));
+  }
+
+  // ── 중간: 노이즈 추가 ─────────────────────────────────────
+  const noise = () => (Math.random() - 0.5) * 9;
+  sL += noise(); sR += noise(); sD += noise();
+  return [sL, sR, sD].indexOf(Math.max(sL, sR, sD));
+}
+
+function resolveHammerRound(actions) {
+  const ps = HG.players;
+  const conflicted = new Set();
+  H_CONFLICTS.forEach(([p1,a1,p2,a2]) => {
+    if (actions[p1]===a1 && actions[p2]===a2) { conflicted.add(p1); conflicted.add(p2); }
+  });
+  const defenders = [0,1,2].filter(i=>actions[i]===2);
+  const lid = defenders.length===1 ? defenders[0] : -1;
+  const hits = [];
+  for (let i=0;i<3;i++) {
+    if (actions[i]===2 || conflicted.has(i)) continue;
+    const a=actions[i], tgt=H_TARGETS[i][a], atk=a===0?ps[i].l:ps[i].r;
+    hits.push({from:i,to:tgt,atk});
+  }
+  const dmg=[0,0,0], events=[];
+  H_CONFLICTS.forEach(([p1,a1,p2,a2])=>{ if(actions[p1]===a1&&actions[p2]===a2) events.push({t:'clash',p1,p2}); });
+  if (defenders.length>1) events.push({t:'lidclash'});
+  hits.forEach(({from,to,atk})=>{
+    if (to===lid) { dmg[from]+=ps[lid].def; events.push({t:'counter',atk:from,def:lid,ctr:ps[lid].def}); }
+    else { dmg[to]+=atk; events.push({t:'hit',from,to,atk}); }
+  });
+  if (lid!==-1 && !hits.some(h=>h.to===lid)) events.push({t:'shield_idle',p:lid});
+  if (!events.length) events.push({t:'nothing'});
+  return {dmg,events};
+}
+
+function appendHammerLog(events) {
+  const log = document.getElementById('h-log-body');
+  const sep = document.createElement('div');
+  sep.className='log-row'; sep.style.color='var(--muted)';
+  sep.textContent='── '+HG.turn+'턴 ──';
+  log.appendChild(sep);
+  events.forEach(e=>{
+    const d=document.createElement('div'); d.className='log-row';
+    if      (e.t==='hit')         d.innerHTML=`<span class="log-lose">⚔️ ${HG.pnames[e.from]} → ${HG.pnames[e.to]}: ${e.atk} 데미지</span>`;
+    else if (e.t==='counter')     d.innerHTML=`<span style="color:#c87ab4">↩️ ${HG.pnames[e.def]} 카운터! ${HG.pnames[e.atk]}에게 ${e.ctr} 데미지</span>`;
+    else if (e.t==='clash')       d.innerHTML=`<span class="log-draw">💥 ${HG.pnames[e.p1]} & ${HG.pnames[e.p2]} 충돌 → 무효</span>`;
+    else if (e.t==='lidclash')    d.innerHTML=`<span class="log-draw">💥 냄비뚜껑 쟁탈 충돌 → 무효</span>`;
+    else if (e.t==='shield_idle') d.innerHTML=`<span class="log-draw">🍳 ${HG.pnames[e.p]} 방어 — 공격 없음</span>`;
+    else                          d.innerHTML=`<span class="log-draw">😶 이번 턴 효과 없음</span>`;
+    log.appendChild(d);
+  });
+  log.scrollTop=log.scrollHeight;
+}
+
+function endHammer() {
+  HG.over = true;
+  const ps = HG.players;
+  const order = [0,1,2].sort((a,b)=>ps[b].hp-ps[a].hp);
+  const tie = ps[order[0]].hp===ps[order[1]].hp;
+  const iWin = !tie && order[0]===0;
+  const medals = ['🥇','🥈','🥉'];
+  const st = document.getElementById('hres-standings');
+  st.innerHTML='';
+  order.forEach((pi,rank)=>{
+    const p=ps[pi]; const pct=Math.max(0,p.hp/p.mh*100);
+    const row=document.createElement('div'); row.className='h-stand-row';
+    row.innerHTML=`<span class="h-stand-rank">${medals[rank]}</span>
+      <span class="h-stand-name">${HG.players[pi].emoji} ${HG.players[pi].name}</span>
+      <div class="h-stand-bwrap"><div class="h-stand-bar"><div class="h-stand-fill" style="width:${pct}%"></div></div></div>
+      <span class="h-stand-hp">${p.hp}/${p.mh}</span>`;
+    st.appendChild(row);
+  });
+  document.getElementById('hres-icon').textContent  = tie?'🫱🏻‍🫲🏻':iWin?'🍳':'🔨';
+  document.getElementById('hres-title').textContent = tie?'무승부':iWin?'승리!':HG.pnames[order[0]]+' 승리';
+  document.getElementById('hres-title').className   = 'end-title '+(tie?'draw':iWin?'win':'lose');
+  document.getElementById('hres-sub').textContent   = tie?'팽팽한 승부였어요!':iWin?'훌륭한 심리전이었어요!':'다음엔 이길 수 있어요!';
+  show('hammer-result');
+}
+
+function hSetBtns(d) {
+  ['hbtn-l','hbtn-d','hbtn-r'].forEach(id=>{ document.getElementById(id).disabled=d; });
+}
+
+// ─── GAME SELECT ───────────────────────────────────────
+function selectGame(type) {
+  G.gameType = type;
+  if (type === 'hammer') show('hammer-tutorial');
+  else show('tutorial');
 }
 
 // ─── INIT ───
+updateHomeEquip();
+const steps = Math.floor(Math.random() * 1001) + 10000;
+document.getElementById('step-count').textContent = steps.toLocaleString('ko-KR');
+
 show('start');
 </script>
 </body>
